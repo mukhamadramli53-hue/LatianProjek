@@ -1,0 +1,207 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-6);
+}
+
+
+
+.container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 960px;
+  width: 100%;
+  gap: 0;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+  box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Left panel - Branding (Argon Primary Gradient) */
+.brandPanel {
+  background: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  padding: var(--space-12) var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.brandContent {
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-size: 3.5rem;
+  margin-bottom: var(--space-5);
+  display: block;
+  filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.4));
+}
+
+.brandTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: var(--space-4);
+  line-height: 1.2;
+  font-family: var(--font-display);
+}
+
+.brandDesc {
+  color: rgba(148, 163, 184, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+
+.brandFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.brandFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: rgba(203, 213, 225, 0.9);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.brandFeatureItem svg {
+  color: var(--semantic-success);
+  flex-shrink: 0;
+}
+
+/* Right panel - Form */
+.formPanel {
+  padding: var(--space-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formCard {
+  width: 100%;
+  max-width: 400px;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.formHeader {
+  margin-bottom: var(--space-8);
+}
+
+.formTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.formSubtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.alert {
+  margin-bottom: 0;
+}
+
+.passwordLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.passwordWrapper {
+  position: relative;
+}
+
+.passwordWrapper .form-input {
+  padding-right: var(--space-12);
+}
+
+.togglePassword {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+  border-radius: var(--radius-small);
+}
+
+.togglePassword:hover {
+  color: var(--text-secondary);
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+.backLink {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.backLink:hover {
+  color: var(--primary-main);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+  }
+
+  .brandPanel {
+    padding: var(--space-8) var(--space-6);
+    min-height: auto;
+  }
+
+  .brandPanel .logo {
+    font-size: 2.5rem;
+    margin-bottom: var(--space-3);
+  }
+
+  .brandTitle {
+    font-size: 1.3rem;
+  }
+
+  .formPanel {
+    padding: var(--space-6);
+  }
+}

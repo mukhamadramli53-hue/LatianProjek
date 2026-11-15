@@ -1,0 +1,510 @@
+/* ============================================================
+   ARGON DASHBOARD 2 - Layout Module (Creative Tim Style)
+   Primary: #5e72e4 (Argon Blue/Indigo)
+   ============================================================ */
+
+/* Wrapper */
+.wrapper {
+  position: relative;
+  top: 0;
+  min-height: 100vh;
+  display: flex;
+  background-color: #f8f9fa;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  overflow-x: clip;
+}
+
+/* ============================================================
+   FLOATING WHITE SIDENAV (Argon 2 Signature)
+   ============================================================ */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 250px;
+  margin: 1rem 0 1rem 1rem;
+  height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem 0 rgba(136, 152, 170, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.sidebarLogo {
+  padding: 22px 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 4;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  text-align: center;
+  background: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(94, 114, 228, 0.35);
+}
+
+.logoText {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #1e293b;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.logoSubtext {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+.sidebarWrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebarWrapper::-webkit-scrollbar { width: 4px; }
+.sidebarWrapper::-webkit-scrollbar-track { background: transparent; }
+.sidebarWrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 99px;
+}
+
+.navSectionLabel {
+  padding: 14px 20px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #64748b;
+}
+
+.nav {
+  margin-top: 4px;
+  padding: 0 8px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nav li { margin: 0; }
+
+.nav li > a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.nav li > a:hover {
+  color: #1e293b;
+  background: #f8f9fa;
+  transform: translateX(2px);
+}
+
+.nav li.active > a {
+  color: #1e293b;
+  background: #f6f9fc;
+  box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+  font-weight: 800;
+}
+
+.navIconBox {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.navIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.nav p {
+  margin: 0;
+  line-height: 1;
+  font-size: 13.5px;
+}
+
+/* ============================================================
+   TOP BACKGROUND BANNER (Argon 2 Signature 300px Banner)
+   ============================================================ */
+.topBackgroundBanner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-width: 100%;
+  height: 300px;
+  background: linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* ============================================================
+   MAIN PANEL
+   ============================================================ */
+.mainPanel {
+  margin-left: 274px;
+  flex: 1 1 0%;
+  min-width: 0;
+  max-width: calc(100% - 274px);
+  width: calc(100% - 274px);
+  background-color: transparent;
+  min-height: 100vh;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   NAVBAR (Argon Glass / Translucent)
+   ============================================================ */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px;
+  min-height: 68px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.navbar.scrolled {
+  background: linear-gradient(310deg, rgba(94, 114, 228, 0.95) 0%, rgba(130, 94, 228, 0.95) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.navbar[data-role="WARGA"].scrolled {
+  background: linear-gradient(310deg, rgba(94, 114, 228, 0.95) 0%, rgba(130, 94, 228, 0.95) 100%);
+}
+
+.navbar[data-role="STAF"].scrolled {
+  background: linear-gradient(310deg, rgba(17, 205, 239, 0.95) 0%, rgba(17, 113, 239, 0.95) 100%);
+}
+
+.navbar[data-role="SUPERVISOR"].scrolled {
+  background: linear-gradient(310deg, rgba(251, 99, 64, 0.95) 0%, rgba(251, 177, 64, 0.95) 100%);
+}
+
+.navbar[data-role="KEPALA_DESA"].scrolled {
+  background: linear-gradient(310deg, rgba(45, 206, 137, 0.95) 0%, rgba(45, 206, 204, 0.95) 100%);
+}
+
+:global(.dark) .navbar.scrolled,
+:global([data-theme="dark"]) .navbar.scrolled {
+  background: linear-gradient(310deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.96) 100%) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+.navbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.navbarToggler {
+  display: none;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  color: #ffffff;
+  padding: 7px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.navbarToggler:hover { background: rgba(255, 255, 255, 0.3); }
+
+.navbarBreadcrumb {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.breadcrumbLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+.breadcrumbTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: capitalize;
+  letter-spacing: -0.01em;
+}
+
+.navbarRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.navbarBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  position: relative;
+}
+
+.navbarBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.navbarBtnText {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.notificationBadge {
+  position: absolute;
+  top: 5px;
+  right: 9px;
+  width: 17px;
+  height: 17px;
+  background: linear-gradient(310deg, #f5365c 0%, #f56036 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(245, 54, 92, 0.4);
+}
+
+.navDivider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.25);
+  margin: 0 4px;
+}
+
+/* Dropdown */
+.navItem { position: relative; }
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 1000;
+  min-width: 210px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.06);
+  padding: 8px;
+  list-style: none;
+  animation: dropdownFadeIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdownHeader {
+  padding: 10px 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 6px;
+}
+
+.dropdownAvatar {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #5b6ef5, #8b5cf6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(91, 110, 245, 0.3);
+}
+
+.dropdownName {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.dropdownEmail {
+  margin: 0;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+.dropdownDivider { display: none; }
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #334155;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.dropdownItem.danger { color: #e11d48; }
+.dropdownItem.danger:hover { background: rgba(225, 29, 72, 0.06); }
+.dropdownItemDanger { color: #e11d48 !important; }
+.dropdownItemDanger:hover { background: rgba(225, 29, 72, 0.06) !important; }
+
+/* ============================================================
+   CONTENT AREA
+   ============================================================ */
+.content {
+  flex: 1;
+  padding: 20px 28px 40px;
+  position: relative;
+  z-index: 2;
+  animation: contentFadeIn 0.3s ease;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@keyframes contentFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 991px) {
+  .sidebar {
+    transform: translateX(-270px);
+    border-radius: 0 16px 16px 0;
+  }
+
+  .mainPanel {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .navbarToggler { display: inline-flex; }
+
+  .wrapper.menuOpen .sidebar {
+    transform: translateX(0);
+    z-index: 1050;
+  }
+
+  .wrapper.menuOpen .mainPanel::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1020;
+    backdrop-filter: blur(2px);
+  }
+}
+
+@media (max-width: 640px) {
+  .content { padding: 16px; }
+  .navbar  { padding: 10px 16px; min-height: 68px; }
+  .navbarBtnText { display: none; }
+  .navbarSearchInput { width: 120px !important; }
+}
+
+@media (max-width: 480px) {
+  .navbarSearch { display: none; }
+}

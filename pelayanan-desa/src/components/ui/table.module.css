@@ -1,0 +1,12 @@
+.tableWrapper { position: relative; width: 100%; overflow: auto; border-radius: var(--radius-large); border: 1px solid var(--border-table); }
+.table { width: 100%; caption-side: bottom; font-size: 0.875rem; border-collapse: collapse; }
+.header { background: var(--secondary-main); border-bottom: 1px solid var(--border-table); }
+.body {}
+.body tr:last-child { border-bottom: 0; }
+.footer { border-top: 1px solid var(--border-table); background: var(--secondary-main); font-weight: 500; }
+.footer tr:last-child { border-bottom: 0; }
+.row { border-bottom: 1px solid var(--border-table); transition: background-color var(--transition-fast); }
+.row:hover { background: var(--primary-soft-bg); }
+.head { height: 3rem; padding: 0 var(--space-4); text-align: left; vertical-align: middle; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+.cell { padding: var(--space-4); vertical-align: middle; }
+.caption { margin-top: var(--space-4); font-size: 0.875rem; color: var(--text-secondary); }

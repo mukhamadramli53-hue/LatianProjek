@@ -1,0 +1,444 @@
+// ============================================================
+// PRISMA SCHEMA - Sistem Pelayanan Desa
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  WARGA
+  STAF
+  SUPERVISOR
+  KEPALA_DESA
+}
+
+enum RequestStatus {
+  DRAFT
+  PENDING        // Menunggu verifikasi staf
+  VERIFIED       // Sudah diverifikasi staf, menunggu approval
+  APPROVED       // Disetujui Kepala Desa
+  REJECTED       // Ditolak
+  COMPLETED      // Selesai diproses
+}
+
+/// Status pengajuan layanan oleh warga (fitur baru)
+enum ApplicationStatus {
+  DIAJUKAN
+  DIVERIFIKASI
+  DIPROSES
+  REVIEW_SUPERVISOR
+  MENUNGGU_APPROVAL
+  DISETUJUI
+  SELESAI
+  PERLU_PERBAIKAN
+  DITOLAK
+}
+
+// ============================================================
+// MODELS
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?   // Nullable untuk OAuth provider di masa depan
+  phone         String?
+  address       String?
+  nik           String?   @unique // Nomor Induk Kependudukan
+  role          Role      @default(WARGA)
+  isActive      Boolean   @default(true)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relasi
+  accounts         Account[]
+  sessions         Session[]
+  serviceRequests  ServiceRequest[]  @relation("RequestedBy")
+  processedRequests ServiceRequest[] @relation("ProcessedBy")
+  historyEntries   RequestHistory[]
+
+  // Relasi (fitur baru)
+  applications               Application[]
+  applicationHistoryEntries ApplicationHistory[]
+  notifications             Notification[]
+  notificationPreference    NotificationPreference?
+  auditLogs                 AuditLog[] @relation("AuditActor")
+  uploadedDocuments         ApplicationDocument[] @relation("UploadedDocuments")
+
+  @@map("users")
+}
+
+// NextAuth required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Master Data Layanan Desa
+model Service {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  name          String
+  description   String?  @db.Text
+  requirements  Json?    // Array of strings untuk list persyaratan
+  form_schema   Json?    // Definisi field formulir dinamis per layanan
+  estimatedTime String?  // Contoh: "1 Hari Kerja"
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  serviceRequests ServiceRequest[]
+  applications    Application[]
+  knowledgeDocuments KnowledgeDocument[]
+
+  @@map("services")
+}
+
+/// Dokumen pengetahuan resmi yang dapat digunakan asisten (FAQ, SOP, atau informasi umum).
+model KnowledgeDocument {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  kind      KnowledgeDocumentKind
+  serviceId String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  service Service? @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([kind, isActive])
+  @@index([serviceId, isActive])
+  @@map("knowledge_documents")
+}
+
+enum KnowledgeDocumentKind {
+  FAQ
+  SOP
+  GENERAL
+}
+
+// Pengajuan pelayanan dari warga
+model ServiceRequest {
+  id          String        @id @default(cuid())
+  requestNumber String      @unique // Nomor pengajuan: PD-YYYYMM-XXXX
+  
+  userId      String        // Warga yang mengajukan
+  serviceId   String
+  
+  status      RequestStatus @default(PENDING)
+  details     Json          // Informasi detail pengajuan (fleksibel per kategori)
+  notes       String?       // Catatan dari warga
+  
+  processedById String?     // Staf/Supervisor yang memproses
+  approvedById  String?     // Kepala Desa yang menyetujui (dicatat di history)
+  
+  processedAt DateTime?
+  completedAt DateTime?
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relasi
+  user          User             @relation("RequestedBy", fields: [userId], references: [id])
+  processedBy   User?            @relation("ProcessedBy", fields: [processedById], references: [id])
+  service       Service          @relation(fields: [serviceId], references: [id])
+  attachments   Attachment[]
+  history       RequestHistory[]
+
+  @@map("service_requests")
+}
+
+// Riwayat perubahan status pengajuan (audit trail)
+model RequestHistory {
+  id             String        @id @default(cuid())
+  requestId      String
+  changedById    String
+  previousStatus RequestStatus?
+  newStatus      RequestStatus
+  note           String?
+  createdAt      DateTime      @default(now())
+
+  request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  changedBy User           @relation(fields: [changedById], references: [id])
+
+  @@map("request_histories")
+}
+
+// File lampiran pengajuan
+model Attachment {
+  id         String   @id @default(cuid())
+  requestId  String
+  fileName   String
+  fileUrl    String
+  fileType   String
+  fileSize   Int      // Ukuran dalam bytes
+  uploadedAt DateTime @default(now())
+
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
+}
+
+// ============================================================
+// MODELS BARU - Fitur Pengajuan Warga
+// ============================================================
+
+/// Pengajuan layanan desa oleh warga
+model Application {
+  id               String            @id @default(cuid())
+  nomor_pengajuan  String            @unique // Format: PD-YYYYMM-XXXX
+
+  userId           String
+  serviceId        String
+
+  status           ApplicationStatus @default(DIAJUKAN)
+  form_data        Json              // Data isian formulir dinamis
+  notes            String?           @db.Text // Catatan tambahan dari warga
+
+  submitted_at     DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relasi
+  user      User                  @relation(fields: [userId], references: [id])
+  service   Service               @relation(fields: [serviceId], references: [id])
+  documents ApplicationDocument[]
+  history   ApplicationHistory[]
+  notifications   Notification[]
+  emailDeliveries EmailDelivery[]
+
+  @@index([userId])
+  @@index([serviceId])
+  @@index([status])
+  @@map("applications")
+}
+
+enum NotificationType {
+  APPLICATION_CREATED
+  STATUS_CHANGED
+  DOCUMENT_REPAIR
+  APPROVED
+  COMPLETED
+}
+
+model Notification {
+  id            String           @id @default(cuid())
+  userId        String
+  applicationId String?
+  type          NotificationType
+  title         String
+  message       String           @db.Text
+  isRead        Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  readAt        DateTime?
+
+  // Status email, jika pengiriman email terkait
+  emailStatus   EmailDeliveryStatus?
+  emailSentAt   DateTime?
+  emailFailedAt DateTime?
+
+  // Identitas kejadian untuk mencegah duplikasi (idempotensi)
+  eventId       String?
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@index([applicationId, createdAt])
+  @@index([eventId])
+  @@map("notifications")
+}
+
+/// Preferensi penerimaan notifikasi per pengguna
+model NotificationPreference {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  emailEnabled   Boolean  @default(true)
+  inAppEnabled   Boolean  @default(true)
+  notifyOnStatus Boolean  @default(true)
+  notifyOnRepair Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}
+
+enum AuditAction {
+  LOGIN
+  LOGOUT
+  CREATE_APPLICATION
+  STATUS_CHANGE
+  APPROVE_APPLICATION
+  REJECT_APPLICATION
+  UPDATE_SERVICE
+  CREATE_SERVICE
+  TOGGLE_SERVICE
+  UPDATE_USER
+  CHANGE_USER_ROLE
+}
+
+model AuditLog {
+  id        String      @id @default(cuid())
+  actorId   String?
+  action    AuditAction
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime    @default(now())
+
+  actor User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId, createdAt])
+  @@index([action, entity])
+  @@map("audit_logs")
+}
+
+/// Audit trail setiap perubahan status pengajuan
+model ApplicationHistory {
+  id            String            @id @default(cuid())
+  applicationId String            @map("application_id")
+  actorId       String            @map("actor_id")
+  oldStatus     ApplicationStatus?
+  newStatus     ApplicationStatus
+  note          String?           @db.Text
+  createdAt     DateTime          @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  actor       User        @relation(fields: [actorId], references: [id])
+
+  @@index([applicationId, createdAt])
+  @@index([actorId])
+  @@map("application_histories")
+}
+
+/// Dokumen persyaratan yang diupload untuk suatu pengajuan
+model ApplicationDocument {
+  id               String   @id @default(cuid())
+  applicationId    String?  // Null saat baru diupload, diisi saat pengajuan disubmit
+  requirement_name String   // Nama persyaratan (misal: "Fotokopi KTP")
+  file_name        String   // Nama file asli dari user
+  storage_key      String   @unique // UUID sebagai key penyimpanan (bukan path asli)
+  mime_type        String
+  file_size        Int      // Dalam bytes
+  uploaded_at      DateTime @default(now())
+  uploadedById    String?
+
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  uploadedBy  User?       @relation("UploadedDocuments", fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([applicationId])
+  @@index([uploadedById])
+  @@map("application_documents")
+}
+
+// ============================================================
+// SISTEM KEANDALAN EMAIL & IDEMPOTENSI (OUTBOX / DELIVERY LOG)
+// ============================================================
+
+enum EmailDeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+  PERMANENT_FAILURE
+}
+
+/// Pencatatan status pengiriman email dan mekanisme idempotensi
+model EmailDelivery {
+  id             String              @id @default(cuid())
+  idempotencyKey String              @unique @map("idempotency_key")
+  applicationId  String?             @map("application_id")
+  recipientEmail String              @map("recipient_email")
+  recipientName  String?             @map("recipient_name")
+  targetRole     Role                @default(WARGA) @map("target_role")
+  subject        String
+  status         EmailDeliveryStatus @default(PENDING)
+  attempts       Int                 @default(0)
+  maxAttempts    Int                 @default(3) @map("max_attempts")
+  lastAttemptAt  DateTime?           @map("last_attempt_at")
+  sentAt         DateTime?           @map("sent_at")
+  failedAt       DateTime?           @map("failed_at")
+  errorMessage   String?             @db.Text @map("error_message")
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+
+  application Application? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@index([recipientEmail])
+  @@index([status])
+  @@index([createdAt])
+  @@map("email_deliveries")
+}
+
+enum AiProviderKey {
+  grok
+  gemini
+  nvidia
+}
+
+model AiProviderConfig {
+  id              String        @id @default(cuid())
+  provider        AiProviderKey @unique
+  encryptedApiKey String?       @db.Text
+  selectedModel   String
+  isActive        Boolean       @default(false)
+  updatedById     String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([isActive])
+  @@map("ai_configurations")
+}
+

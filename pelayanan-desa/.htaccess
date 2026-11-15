@@ -1,0 +1,24 @@
+# ============================================================
+# Security Protection for Next.js App in Apache DocumentRoot
+# ============================================================
+
+Options -Indexes
+
+# Lindungi file env dan file sensitif
+<FilesMatch "^\.env|package(-lock)?\.json|tsconfig\.json|\.ts$|\.tsx$|\.prisma$">
+    Require all denied
+</FilesMatch>
+
+# Blokir akses langsung ke folder internal Next.js dan penyimpanan private
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Blokir akses web langsung ke private_uploads (harus via API terotorisasi /api/files/)
+    RewriteRule ^private_uploads(/.*)?$ - [F,L]
+    
+    # Blokir akses web langsung ke folder source code & database
+    RewriteRule ^(src|prisma|scratch|node_modules)(/.*)?$ - [F,L]
+
+    # Redirect seluruh akses langsung folder pelayanan-desa ke root LatihanProjek / index.php
+    RewriteRule ^$ ../index.php [R=302,L]
+</IfModule>

@@ -1,0 +1,31 @@
+# ============================================================
+# Apache Configuration - Sistem Pelayanan Desa (Laragon)
+# ============================================================
+
+Options -Indexes
+DirectoryIndex disabled
+
+# Jika server Next.js port 3000 belum siap / mati, tampilkan halaman transisi otomatis
+ErrorDocument 502 /index.php
+ErrorDocument 503 /index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Jangan proxy file diagnostik launcher.php dan index.php
+    RewriteRule ^(launcher\.php|index\.php)$ - [L]
+
+    # 2. Jika diakses melalui localhost (http://localhost/LatihanProjek/...),
+    #    alihkan ke Virtual Host resmi Laragon (http://LatihanProjek.test/...)
+    #    agar semua asset Next.js (/_next/...) dan auth session bekerja optimal
+    RewriteCond %{HTTP_HOST} ^(localhost|127\.0\.0\.1)(:\d+)?$ [NC]
+    RewriteRule ^(.*)$ http://LatihanProjek.test/$1 [R=302,L]
+
+    # 3. WebSocket support untuk Next.js Fast Refresh (HMR)
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule ^(.*)$ ws://127.0.0.1:3000/$1 [P,L]
+
+    # 4. Proxy semua request ke server Next.js di port 3000
+    RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+</IfModule>

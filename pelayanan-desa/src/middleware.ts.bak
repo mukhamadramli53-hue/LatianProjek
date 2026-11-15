@@ -1,0 +1,124 @@
+/**
+ * Next.js Middleware - Route Protection & RBAC
+ *
+ * Middleware ini berjalan di Edge Runtime pada setiap request
+ * untuk melindungi rute berdasarkan autentikasi dan role.
+ *
+ * Alur:
+ * 1. Request masuk ke rute protected
+ * 2. Middleware cek JWT session
+ * 3. Jika tidak ada session → redirect ke /login
+ * 4. Jika role tidak sesuai → redirect ke /403
+ * 5. Jika OK → lanjutkan ke halaman
+ */
+
+import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getDashboardUrl } from "@/lib/rbac";
+import type { Role } from "@prisma/client";
+
+// ============================================================
+// ROUTE CONFIGURATION
+// ============================================================
+
+/** Rute yang memerlukan autentikasi (pattern prefix) */
+const PROTECTED_PREFIXES = [
+  "/warga",
+  "/staf",
+  "/supervisor",
+  "/kades",
+  "/profil",
+  "/api/protected",
+  "/api/notifications",
+  "/api/applications",
+  "/api/files",
+];
+
+/** Rute yang hanya boleh diakses role tertentu */
+const ROLE_PROTECTED_ROUTES: Record<string, Role[]> = {
+  "/staf": ["STAF", "SUPERVISOR", "KEPALA_DESA"],
+  "/supervisor": ["SUPERVISOR", "KEPALA_DESA"],
+  "/kades": ["KEPALA_DESA"],
+  "/warga": ["WARGA", "STAF", "SUPERVISOR", "KEPALA_DESA"],
+};
+
+/** Rute publik yang tidak perlu autentikasi */
+const PUBLIC_ROUTES = ["/login", "/", "/403", "/api/auth", "/api/ai/public-chat", "/layanan"];
+
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+function isPublicRoute(pathname: string): boolean {
+  return PUBLIC_ROUTES.some((route) => (route === "/" ? pathname === "/" : pathname.startsWith(route)));
+}
+
+function getAllowedRoles(pathname: string): Role[] | null {
+  for (const [prefix, roles] of Object.entries(ROLE_PROTECTED_ROUTES)) {
+    if (pathname.startsWith(prefix)) {
+      return roles as Role[];
+    }
+  }
+  return null;
+}
+
+// ============================================================
+// MIDDLEWARE HANDLER
+// ============================================================
+
+export default auth(function middleware(req: NextRequest & { auth: { user?: { role?: string } } | null }) {
+  const { pathname } = req.nextUrl;
+  const session = req.auth;
+
+  // Lewatkan rute publik
+  if (isPublicRoute(pathname)) {
+    // Redirect user yang sudah login dari halaman login
+    if (pathname === "/login" && session?.user) {
+      const role = session.user.role as Role;
+      return NextResponse.redirect(
+        new URL(getDashboardUrl(role), req.url)
+      );
+    }
+    return NextResponse.next();
+  }
+
+  // Cek apakah rute memerlukan autentikasi
+  if (isProtectedRoute(pathname)) {
+    // Belum login → tolak jika API route atau redirect ke login jika halaman UI
+    if (!session?.user) {
+      if (pathname.startsWith("/api/")) {
+        return NextResponse.json(
+          { error: "Unauthorized: Silakan login terlebih dahulu untuk mengakses layanan ini." },
+          { status: 401 }
+        );
+      }
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("callbackUrl", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    const userRole = session.user.role as Role;
+
+    // Cek role authorization
+    const allowedRoles = getAllowedRoles(pathname);
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+      return NextResponse.redirect(new URL("/403", req.url));
+    }
+  }
+
+  return NextResponse.next();
+});
+
+export const config = {
+  matcher: [
+    /*
+     * Match all paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - favicon.ico
+     * - public files (images, fonts, dll)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};

@@ -1,0 +1,11 @@
+.shell { min-height: 100vh; background: var(--bg-app); }
+.main { flex: 1; padding: var(--space-8) var(--space-6); }
+.container { max-width: var(--spacing-page-max-width); margin: 0 auto; }
+.pageHeader { margin-bottom: var(--space-8); }
+.pageHeader h1 { font-size: var(--text-page-title-size); font-weight: var(--text-page-title-weight); line-height: var(--text-page-title-line-height); letter-spacing: var(--text-page-title-letter-spacing); color: var(--text-primary); margin-bottom: var(--space-2); }
+.pageHeader p { font-size: var(--text-body-lg-size); line-height: var(--text-body-lg-line-height); color: var(--text-secondary); }
+.eyebrow { text-transform: uppercase; font-size: var(--text-caption-size); letter-spacing: 0.08em; font-weight: 700; color: var(--primary-main); margin-bottom: var(--space-3); }
+@media (max-width: 768px) {
+  .main { padding: var(--space-6) var(--space-4); }
+  .pageHeader h1 { font-size: var(--text-h2-size); }
+}

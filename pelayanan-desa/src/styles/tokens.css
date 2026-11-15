@@ -1,0 +1,255 @@
+/* ============================================================
+   CSS VARIABLES (Design Tokens) - Modern Premium Theme
+   ============================================================ */
+:root {
+  /* --- Primitive Tokens --- */
+  --color-neutral-50:  #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  /* --- Brand Colors --- */
+  --color-indigo-50:  #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-200: #c7d2fe;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
+
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+
+  --color-amber-400:  #fbbf24;
+  --color-amber-500:  #f59e0b;
+  --color-amber-600:  #d97706;
+  --color-amber-700:  #b45309;
+
+  --color-rose-400:   #fb7185;
+  --color-rose-500:   #f43f5e;
+  --color-rose-600:   #e11d48;
+  --color-rose-700:   #be123c;
+
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+
+  /* ============================================================
+     SEMANTIC COLOR FOUNDATION - Argon Dashboard 2 Theme
+     ============================================================ */
+
+  /* --- Primary (Argon Blue/Indigo) --- */
+  --primary-main:       #5e72e4;
+  --primary-hover:      #475ce0;
+  --primary-active:     #324cdd;
+  --primary-foreground: #ffffff;
+  --primary-soft-bg:    rgba(94, 114, 228, 0.1);
+  --primary-soft-border:rgba(94, 114, 228, 0.2);
+
+  /* --- Creative Tim Argon Gradients --- */
+  --gradient-brand:       linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  --gradient-brand-hover: linear-gradient(310deg, #475ce0 0%, #744ee0 100%);
+  --gradient-primary:     linear-gradient(310deg, #5e72e4 0%, #825ee4 100%);
+  --gradient-success:     linear-gradient(310deg, #2dce89 0%, #2dcecc 100%);
+  --gradient-warning:     linear-gradient(310deg, #fb6340 0%, #fbb140 100%);
+  --gradient-danger:      linear-gradient(310deg, #f5365c 0%, #f56036 100%);
+  --gradient-info:        linear-gradient(310deg, #11cdef 0%, #1171ef 100%);
+  --gradient-dark:        linear-gradient(310deg, #344767 0%, #141727 100%);
+  --gradient-sidebar:     #ffffff;
+
+  /* --- Secondary --- */
+  --secondary-main:       #f6f9fc;
+  --secondary-hover:      #e9ecef;
+  --secondary-foreground: #344767;
+
+  /* --- Background --- */
+  --bg-app:     #f8f9fa;
+  --bg-surface: #ffffff;
+  --bg-card:    #ffffff;
+  --bg-input:   #ffffff;
+  --bg-header:  #5e72e4;
+
+  /* --- Text --- */
+  --text-primary:   #344767;
+  --text-secondary: #67748e;
+  --text-muted:     #8392ab;
+  --text-disabled:  #cbd5e1;
+  --text-inverse:   #ffffff;
+
+  /* --- Border --- */
+  --border-card:    rgba(0, 0, 0, 0.05);
+  --border-input:   #d2d6da;
+  --border-divider: #e9ecef;
+  --border-table:   #e9ecef;
+  --border-focus:   #5e72e4;
+
+  /* --- Semantic --- */
+  --semantic-success:        #2dce89;
+  --semantic-success-bg:     rgba(45, 206, 137, 0.1);
+  --semantic-success-border: rgba(45, 206, 137, 0.25);
+  --semantic-success-text:   #2dce89;
+  --color-green-700:         #28b779;
+
+  --semantic-warning:        #fb6340;
+  --semantic-warning-bg:     rgba(251, 99, 64, 0.1);
+  --semantic-warning-border: rgba(251, 99, 64, 0.25);
+  --semantic-warning-text:   #fb6340;
+
+  --semantic-error:          #f5365c;
+  --semantic-error-bg:       rgba(245, 54, 92, 0.1);
+  --semantic-error-border:   rgba(245, 54, 92, 0.25);
+  --semantic-error-text:     #f5365c;
+  --color-red-700:           #e02e50;
+
+  --semantic-info:           #11cdef;
+  --semantic-info-bg:        rgba(17, 205, 239, 0.1);
+  --semantic-info-border:    rgba(17, 205, 239, 0.25);
+  --semantic-info-text:      #11cdef;
+
+  /* --- Shadows --- */
+  --shadow-none:   none;
+  --shadow-xs:     0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-small:  0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-large:  0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-xl:     0 20px 48px rgba(0, 0, 0, 0.16);
+  --shadow-brand:  0 8px 24px rgba(91, 110, 245, 0.32);
+  --shadow-card:   0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  /* --- Border Radius --- */
+  --radius-none:   0px;
+  --radius-xs:     4px;
+  --radius-small:  8px;
+  --radius-medium: 12px;
+  --radius-large:  16px;
+  --radius-xl:     20px;
+  --radius-2xl:    24px;
+  --radius-full:   9999px;
+  --radius-pill:   9999px;
+
+  /* --- Spacing Scale (4px grid) --- */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+
+  /* --- Semantic Spacing --- */
+  --spacing-card-padding:     var(--space-6);
+  --spacing-card-padding-sm:  var(--space-4);
+  --spacing-card-gap:         var(--space-5);
+
+  --spacing-form-group-gap:   var(--space-5);
+  --spacing-form-field-gap:   var(--space-2);
+  --spacing-form-helper-gap:  var(--space-1);
+  --spacing-form-section-gap: var(--space-8);
+
+  --spacing-section-gap:        var(--space-10);
+  --spacing-section-header-gap: var(--space-6);
+
+  --spacing-page-padding-x:   var(--space-6);
+  --spacing-page-padding-y:   var(--space-8);
+  --spacing-page-top:         var(--space-16);
+  --spacing-page-max-width:   1280px;
+
+  /* --- Typography --- */
+  --font-sans:    "Inter", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
+
+  /* --- Type Scale --- */
+  --text-display-size:           clamp(2rem, 5vw, 3rem);
+  --text-display-weight:         800;
+  --text-display-line-height:    1.1;
+  --text-display-letter-spacing: -0.03em;
+
+  --text-page-title-size:           clamp(1.5rem, 4vw, 2rem);
+  --text-page-title-weight:         700;
+  --text-page-title-line-height:    1.2;
+  --text-page-title-letter-spacing: -0.02em;
+
+  --text-h1-size:        clamp(1.375rem, 3vw, 1.75rem);
+  --text-h1-weight:      700;
+  --text-h1-line-height: 1.3;
+
+  --text-h2-size:        clamp(1.125rem, 2.5vw, 1.375rem);
+  --text-h2-weight:      600;
+  --text-h2-line-height: 1.35;
+
+  --text-h3-size:        1.0625rem;
+  --text-h3-weight:      600;
+  --text-h3-line-height: 1.4;
+
+  --text-h4-size:        0.9375rem;
+  --text-h4-weight:      600;
+  --text-h4-line-height: 1.4;
+
+  --text-body-lg-size:        1rem;
+  --text-body-lg-line-height: 1.7;
+
+  --text-body-size:        0.9375rem;
+  --text-body-line-height: 1.65;
+
+  --text-body-sm-size:        0.875rem;
+  --text-body-sm-line-height: 1.6;
+
+  --text-caption-size:        0.8125rem;
+  --text-caption-line-height: 1.5;
+
+  --text-helper-size:        0.8125rem;
+  --text-helper-line-height: 1.4;
+
+  --text-label-size:           0.8125rem;
+  --text-label-weight:         600;
+  --text-label-line-height:    1.4;
+  --text-label-letter-spacing: 0.02em;
+
+  --text-error-size:        0.8125rem;
+  --text-error-line-height: 1.4;
+
+  /* --- Transitions --- */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   DARK THEME VARIABLES
+   ============================================================ */
+[data-theme="dark"],
+.dark {
+  --bg-app:     #0f172a;
+  --bg-surface: #1e293b;
+  --bg-card:    #1e293b;
+  --bg-input:   #1e293b;
+  --text-primary:   #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+  --border-card:    rgba(255, 255, 255, 0.08);
+  --border-input:   #334155;
+  --border-divider: #334155;
+  --border-table:   #334155;
+  --secondary-main: #1e293b;
+  --secondary-hover: #334155;
+  --secondary-foreground: #f8fafc;
+}
+
